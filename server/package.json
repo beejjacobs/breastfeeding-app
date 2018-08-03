@@ -1,0 +1,14 @@
+{
+  "name": "breastfeeding-app-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "dependencies": {
+    "moment": "^2.22.2",
+    "node-schedule": "^1.3.0",
+    "socket.io": "^2.1.1"
+  }
+}

@@ -2,9 +2,9 @@
   <v-app dark>
     <v-content>
       <v-layout align-center justify-center class="section">
-        <v-flex>
+        <v-flex v-if="feeds.length !== 0">
           <div class="display-1 ma-1">Last Feed</div>
-          <table class="title  mt-1 mb-1">
+          <table class="title mt-1 mb-1">
             <tr>
               <td>Started</td>
               <td colspan="2">{{lastFeed.dateTime | moment('HH:mm')}}</td>
@@ -36,6 +36,8 @@
 
 <script>
   import Breast from './Breast';
+  import io from 'socket.io-client'
+  const socket = io.connect('http://192.168.0.2:3002');
 
   export default {
     components: {Breast},
@@ -49,14 +51,20 @@
     },
     methods: {
       startFeed(side) {
-        this.feeds.push({dateTime: this.$moment(), first: side, both: false});
+        let feed = {dateTime: this.$moment(), first: side, both: false};
+        socket.emit('feed', feed);
+        this.feeds.push(feed);
       },
       both() {
         this.lastFeed.both = true;
+        socket.emit('feed-update', this.lastFeed);
       }
     },
     computed: {
       lastFeed() {
+        if (this.feeds.length === 0) {
+          return {};
+        }
         let feed = this.feeds[this.feeds.length - 1];
         feed.next = feed.dateTime.clone().add(2, 'hours');
         this.timeToFeed = feed.next.fromNow();
@@ -70,6 +78,26 @@
           this.timeToFeed = this.lastFeed.next.fromNow();
         }
       }, 60 * 1000);
+
+      const momentise = feed => {
+        feed.dateTime = this.$moment(feed.dateTime);
+        return feed;
+      };
+
+      socket.on('feed', feed => {
+        console.log(feed);
+        this.feeds.push(momentise(feed));
+      });
+      socket.on('feed-update', feed => {
+        console.log(feed);
+        this.feeds[this.feeds.length - 1] = momentise(feed);
+      });
+      socket.on('todays-feeds', feeds => {
+        this.feeds = [];
+        feeds.forEach(feed => {
+          this.feeds.push(momentise(feed));
+        });
+      });
     }
   }
 </script>
