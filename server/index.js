@@ -3,7 +3,7 @@ const moment = require('moment');
 const fs = require('fs');
 
 /** @type Array */
-let feeds = require('./feeds/all-feeds');
+let feeds = require('./feeds/all-feeds.json');
 
 function todaysFeeds() {
   let now = moment();
@@ -71,3 +71,5 @@ io.on('connection', function (socket) {
 function saveFeeds() {
   fs.writeFileSync(`./feeds/all-feeds.json`, JSON.stringify(feeds, null, 2), 'utf8');
 }
+
+console.log('listening on port 3002');
