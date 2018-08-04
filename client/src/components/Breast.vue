@@ -1,5 +1,5 @@
 <template>
-  <v-btn fab dark large :color="colour" :depressed="status" @click="$emit('click')">{{side}}</v-btn>
+  <v-btn fab dark :large="large" :small="!large" :color="colour" :depressed="status" @click="$emit('click')" :outline="outline">{{side}}</v-btn>
 </template>
 
 <script>
@@ -16,6 +16,14 @@
       status: {
         type: Boolean,
         default: false
+      },
+      outline: {
+        type: Boolean,
+        default: false
+      },
+      large: {
+        type: Boolean,
+        default: true
       }
     },
     computed: {
@@ -32,5 +40,8 @@
     width: 100px;
     font-size: xx-large;
     margin: 30px;
+  }
+  .v-btn--large.v-btn--outline {
+    border: 2px solid currentColor;
   }
 </style>
