@@ -74,11 +74,10 @@
     },
     methods: {
       side(side) {
-        console.log(side);
         this.feed.first = side;
       },
       add() {
-        this.$emit('new-feed', this.feed);
+        this.$emit('new-feed', Object.assign({}, this.feed));
         this.show = false;
       }
     },

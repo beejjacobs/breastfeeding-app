@@ -25,6 +25,7 @@
 <script>
   import io from 'socket.io-client';
   import util from './util';
+
   const url = process.env.NODE_ENV === 'production' ? '192.162.0.2' : 'localhost';
   const socket = io.connect(`http://${url}:3002`);
 
@@ -50,9 +51,12 @@
       newFeed(feed) {
         feed = util.momentise(feed);
         socket.emit('add-feed', feed);
-        let index =util.insertIndex(this.feeds, feed);
-        console.log(feed.dateTime.format() + ' - ' + index);
-        this.feeds.splice(index, 0, feed);
+        let index = util.insertIndex(this.feeds, feed);
+        if (index === -1) {
+          this.feeds.push(feed);
+        } else {
+          this.feeds.splice(index, 0, feed);
+        }
       }
     },
     computed: {
@@ -70,17 +74,27 @@
     },
     created() {
       socket.on('feed', feed => {
-        console.log(feed);
+        console.log('feed ', feed);
         this.feeds.push(util.momentise(feed));
       });
       socket.on('feed-update', feed => {
-        console.log(feed);
+        console.log('feed-update ', feed);
         this.$set(this.feeds, this.feeds.length - 1, util.momentise(feed));
       });
       socket.on('todays-feeds', feeds => {
         this.loading = false;
-        console.log(feeds);
+        console.log('todays-feeds ', feeds);
         this.feeds = feeds.map(util.momentise);
+      });
+      socket.on('add-feed', feed => {
+        console.log('add-feed ', feed);
+        feed = util.momentise(feed);
+        let index = util.insertIndex(this.feeds, feed);
+        if (index === -1) {
+          this.feeds.push(feed);
+        } else {
+          this.feeds.splice(index, 0, feed);
+        }
       });
     }
   }
