@@ -30,5 +30,13 @@ export default {
   momentise(feed) {
     feed.dateTime = Vue.moment(feed.dateTime);
     return feed;
+  },
+  insertIndex(feeds, feed) {
+    return feeds.findIndex(f => {
+      return f.dateTime.diff(feed.dateTime) > 0;
+    });
+  },
+  isToday(feed) {
+    return feed.dateTime.isSame(Vue.moment(), 'day');
   }
 };

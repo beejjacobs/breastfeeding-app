@@ -1,6 +1,11 @@
 <template>
   <v-flex>
-    <div class="display-1 ma-1">Last Feed</div>
+    <v-btn fab fixed top left color="blue darken-3" outline><span class="white--text headline">{{feeds.length}}</span></v-btn>
+    <div class="display-1">Last Feed</div>
+    <div class="status mt-1 mb-1">
+      <breast :side="lastFeed.first" status></breast>
+      <breast v-if="lastFeed.both" :side="lastFeed.first === 'L' ? 'R' : 'L'" status></breast>
+    </div>
     <table class="title mt-1 mb-1">
       <tr>
         <td>Started</td>
@@ -13,13 +18,9 @@
         <td>{{timeToFeed}}</td>
       </tr>
     </table>
-    <div class="status mt-1 mb-1">
-      <breast :side="lastFeed.first" status></breast>
-      <breast v-if="lastFeed.both" :side="lastFeed.first === 'L' ? 'R' : 'L'" status></breast>
-    </div>
     <v-btn v-if="!lastFeed.both" dark large color="orange" @click="both">Both</v-btn>
     <div v-else class="spacer"></div>
-    <history></history>
+    <history :feeds="feeds"></history>
   </v-flex>
 </template>
 
@@ -27,7 +28,7 @@
   import util from '../util';
   export default {
     name: "LastFeed",
-    props: ['lastFeed'],
+    props: ['lastFeed', 'feeds'],
     data() {
       return {
         timeToFeed: '',
@@ -42,6 +43,9 @@
         if (this.lastFeed.hasOwnProperty('dateTime')) {
           this.timeSinceFeed = util.dateToHoursMinutes(this.lastFeed.dateTime);
         }
+      },
+      both() {
+        this.$emit('both');
       }
     },
     watch: {
@@ -60,8 +64,11 @@
 </script>
 
 <style scoped>
+  .display-1 {
+    margin-top: 40px;
+  }
   .spacer {
-    height: 56px;
+    height: 35px;
   }
 
   .status {

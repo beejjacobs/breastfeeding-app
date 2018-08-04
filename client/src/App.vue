@@ -2,7 +2,7 @@
   <v-app dark>
     <v-content>
       <v-layout align-center justify-center class="section">
-        <last-feed v-if="feeds.length !== 0" :last-feed="lastFeed"></last-feed>
+        <last-feed v-if="feeds.length !== 0" :last-feed="lastFeed" :feeds="todaysFeeds" @both="both"></last-feed>
         <v-flex v-else-if="loading">
           <v-progress-circular
               :size="50"
@@ -17,7 +17,7 @@
       <v-layout align-center class="section">
         <start-feed @start-feed="startFeed"></start-feed>
       </v-layout>
-      <add-feed></add-feed>
+      <add-feed @new-feed="newFeed"></add-feed>
     </v-content>
   </v-app>
 </template>
@@ -46,6 +46,13 @@
       both() {
         this.lastFeed.both = true;
         socket.emit('feed-update', this.lastFeed);
+      },
+      newFeed(feed) {
+        feed = util.momentise(feed);
+        socket.emit('add-feed', feed);
+        let index =util.insertIndex(this.feeds, feed);
+        console.log(feed.dateTime.format() + ' - ' + index);
+        this.feeds.splice(index, 0, feed);
       }
     },
     computed: {
@@ -56,6 +63,9 @@
         let feed = this.feeds[this.feeds.length - 1];
         feed.next = feed.dateTime.clone().add(2, 'hours');
         return feed;
+      },
+      todaysFeeds() {
+        return this.feeds.filter(util.isToday);
       }
     },
     created() {
@@ -83,6 +93,9 @@
     overflow: hidden;
     background: black;
     color: #d8d8d8;
+  }
+  .theme--dark .v-card {
+    background: black;
   }
 
   .display-1 {
