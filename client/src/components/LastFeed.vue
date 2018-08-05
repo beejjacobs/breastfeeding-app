@@ -1,6 +1,6 @@
 <template>
   <v-flex>
-    <v-btn fab fixed top left color="blue darken-3" outline><span class="white--text headline">{{feeds.length}}</span></v-btn>
+    <v-btn fab fixed top left color="white" outline><span class="white--text headline">{{feeds.length}}</span></v-btn>
     <div class="display-1">Last Feed</div>
     <div class="status mt-1 mb-1">
       <breast :side="lastFeed.first" status></breast>
