@@ -1,9 +1,13 @@
 const io = require('socket.io')(3002);
 const moment = require('moment');
 const fs = require('fs');
+const path = require('path');
+
+let jsonPath = path.join(__dirname, 'feeds', 'all-feeds.json');
+console.log(jsonPath);
 
 /** @type Array */
-let feeds = require('./feeds/all-feeds.json');
+let feeds = require(jsonPath);
 
 function todaysFeeds() {
   let now = moment();
@@ -69,7 +73,7 @@ io.on('connection', function (socket) {
 });
 
 function saveFeeds() {
-  fs.writeFileSync(`./feeds/all-feeds.json`, JSON.stringify(feeds, null, 2), 'utf8');
+  fs.writeFileSync(jsonPath, JSON.stringify(feeds, null, 2), 'utf8');
 }
 
 console.log('listening on port 3002');
