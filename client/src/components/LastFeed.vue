@@ -1,6 +1,6 @@
 <template>
   <v-flex>
-    <v-btn fab fixed top left color="white" outline><span class="white--text headline">{{feeds.length}}</span></v-btn>
+    <v-btn fab fixed top left color="white" outline><span class="white--text headline">{{feedCount}}</span></v-btn>
     <div class="display-1">Last Feed</div>
     <div class="status mt-1 mb-1">
       <breast :side="lastFeed.first" status></breast>
@@ -20,7 +20,6 @@
     </table>
     <v-btn v-if="!lastFeed.both" dark large color="orange" @click="both">Both</v-btn>
     <div v-else class="spacer"></div>
-    <history :feeds="feeds"></history>
   </v-flex>
 </template>
 
@@ -28,7 +27,7 @@
   import util from '../util';
   export default {
     name: "LastFeed",
-    props: ['lastFeed', 'feeds'],
+    props: ['lastFeed', 'feedCount'],
     data() {
       return {
         timeToFeed: '',
@@ -54,7 +53,6 @@
       }
     },
     created() {
-
       this.updateTimes();
       setInterval(() => {
         this.updateTimes();

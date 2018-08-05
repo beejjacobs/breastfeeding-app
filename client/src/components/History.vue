@@ -10,12 +10,19 @@
       <div class="display-1">Today's Feeds</div>
       <table>
         <tr>
+          <td></td>
           <td>Time</td>
           <td></td>
         </tr>
-        <tr v-for="feed in feeds"
-            :key="feed.dateTime.format()">
-          <td>{{feed.dateTime.format('HH:mm')}}</td>
+        <tr v-for="(feed, i) in feeds" :key="i">
+          <td>
+            <v-speed-dial direction="right" v-model="menus[i]">
+              <v-btn slot="activator" color="blue darken-2" v-model="menus[i]" dark fab small><v-icon>settings</v-icon><v-icon>close</v-icon></v-btn>
+              <v-btn fab dark small color="green"><v-icon>edit</v-icon></v-btn>
+              <v-btn fab dark small color="red darken-3" @click="$emit('delete-feed', feed)"><v-icon>delete</v-icon></v-btn>
+            </v-speed-dial>
+          </td>
+          <td  :class="{hide: menus[i]}">{{feed.dateTime.format('HH:mm')}}</td>
           <td>
             <breast :side="feed.first" status :large="false"></breast>
             <breast v-if="feed.both" :side="feed.first === 'L' ? 'R' : 'L'" status :large="false"></breast>
@@ -32,8 +39,14 @@
     props: ['feeds'],
     data() {
       return {
-        show: false
+        show: false,
+        menus: []
       };
+    },
+    watch: {
+      feeds() {
+        this.menus.length = this.feeds.length;
+      }
     }
   }
 </script>
@@ -55,12 +68,20 @@
     border-style: hidden;
   }
 
-  td:nth-child(2) {
+  td:last-child {
     text-align: left;
+  }
+  td:nth-child(2) {
+    min-width: 128px;
   }
 
   table td, table th {
     border: 1px solid rgba(216, 216, 216, 0.5);
     padding: 5px;
+    transition: 0.5s;
+  }
+
+  .hide {
+    color: black;;
   }
 </style>

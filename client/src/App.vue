@@ -2,7 +2,8 @@
   <v-app dark>
     <v-content>
       <v-layout align-center justify-center class="section">
-        <last-feed v-if="feeds.length !== 0" :last-feed="lastFeed" :feeds="todaysFeeds" @both="both"></last-feed>
+        <last-feed v-if="feeds.length !== 0" :last-feed="lastFeed" :feed-count="todaysFeeds.length" @both="both"></last-feed>
+        <history v-if="feeds.length !== 0" :feeds="todaysFeeds" @delete-feed="deleteFeed"></history>
         <v-flex v-else-if="loading">
           <v-progress-circular
               :size="50"
@@ -57,6 +58,15 @@
         } else {
           this.feeds.splice(index, 0, feed);
         }
+      },
+      deleteFeed(feed) {
+        socket.emit('delete-feed', feed);
+        let index = this.feeds.findIndex(value => util.match(feed, value));
+        if (index !== -1) {
+          this.feeds.splice(index, 1);
+        } else {
+          console.log('feed not found');
+        }
       }
     },
     computed: {
@@ -94,6 +104,16 @@
           this.feeds.push(feed);
         } else {
           this.feeds.splice(index, 0, feed);
+        }
+      });
+      socket.on('delete-feed', feed => {
+        console.log('delete-feed ', feed);
+        feed = util.momentise(feed);
+        let index = this.feeds.findIndex(value => util.match(feed, value));
+        if (index !== -1) {
+          this.feeds.splice(index, 1);
+        } else {
+          console.log('feed not found');
         }
       });
     }

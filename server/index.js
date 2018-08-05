@@ -24,6 +24,10 @@ function insertIndex(feed) {
   });
 }
 
+function match(feed1, feed2) {
+  return feed1.dateTime === feed2.dateTime && feed1.first === feed2.first && feed1.both === feed2.both;
+}
+
 io.on('connection', function (socket) {
   let message = 'client connected';
   let toSend = [];
@@ -69,6 +73,17 @@ io.on('connection', function (socket) {
     console.log(`add-feed at ${index}`, feed);
     socket.broadcast.emit('add-feed', feed);
     saveFeeds();
+  });
+
+  socket.on('delete-feed', feed => {
+    let index = feeds.findIndex(value => match(feed, value));
+    if (index !== -1) {
+      console.log(`delete-feed at ${index}`, feed);
+      feeds.splice(index, 1);
+      socket.broadcast.emit('delete-feed', feed);
+    } else {
+      console.log(`delete-feed not removed: `, feed, ', feed not found');
+    }
   });
 });
 

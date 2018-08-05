@@ -1,5 +1,12 @@
 import Vue from 'vue';
 
+/**
+ * @typedef {Object} feed
+ * @property {string|moment} dateTime
+ * @property {string} first
+ * @property {boolean} both
+ */
+
 export default {
   fromNow(date) {
     return Vue.moment.duration(date.diff(Vue.moment()));
@@ -49,5 +56,8 @@ export default {
   },
   isToday(feed) {
     return feed.dateTime.isSame(Vue.moment(), 'day');
+  },
+  match(feed1, feed2) {
+    return feed1.dateTime.format() === feed2.dateTime.format() && feed1.first === feed2.first && feed1.both === feed2.both;
   }
 };
