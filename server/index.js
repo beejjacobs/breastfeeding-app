@@ -75,12 +75,25 @@ io.on('connection', function (socket) {
     saveFeeds();
   });
 
+  socket.on('edit-feed', (feed, newFeed) => {
+    let index = feeds.findIndex(value => match(feed, value));
+    if (index !== -1) {
+      console.log(`edit-feed at ${index}`, feed);
+      feeds.splice(index, 1, newFeed);
+      socket.broadcast.emit('edit-feed', feed, newFeed);
+      saveFeeds();
+    } else {
+      console.log(`edit-feed not edited: `, feed, ', feed not found');
+    }
+  });
+
   socket.on('delete-feed', feed => {
     let index = feeds.findIndex(value => match(feed, value));
     if (index !== -1) {
       console.log(`delete-feed at ${index}`, feed);
       feeds.splice(index, 1);
       socket.broadcast.emit('delete-feed', feed);
+      saveFeeds();
     } else {
       console.log(`delete-feed not removed: `, feed, ', feed not found');
     }

@@ -9,12 +9,14 @@ Vue.use(VueMoment)
 
 import AddFeed from './components/AddFeed';
 import Breast from './components/Breast';
+import FeedView from './components/FeedView';
 import History from './components/History';
 import LastFeed from './components/LastFeed';
 import StartFeed from './components/StartFeed';
 
 Vue.component('add-feed', AddFeed);
 Vue.component('breast', Breast);
+Vue.component('feed-view', FeedView);
 Vue.component('history', History);
 Vue.component('last-feed', LastFeed);
 Vue.component('start-feed', StartFeed);

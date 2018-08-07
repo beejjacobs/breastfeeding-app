@@ -3,7 +3,7 @@
     <v-content>
       <v-layout align-center justify-center class="section">
         <last-feed v-if="feeds.length !== 0" :last-feed="lastFeed" :feed-count="todaysFeeds.length" @both="both"></last-feed>
-        <history v-if="feeds.length !== 0" :feeds="todaysFeeds" @delete-feed="deleteFeed"></history>
+        <history v-if="feeds.length !== 0" :feeds="todaysFeeds" @delete-feed="deleteFeed" @edit-feed="editFeed"></history>
         <v-flex v-else-if="loading">
           <v-progress-circular
               :size="50"
@@ -59,6 +59,16 @@
           this.feeds.splice(index, 0, feed);
         }
       },
+      editFeed(feed, newFeed) {
+        newFeed = util.momentise(newFeed);
+        socket.emit('edit-feed', feed, newFeed);
+        let index = this.feeds.findIndex(value => util.match(feed, value));
+        if (index !== -1) {
+          this.feeds.splice(index, 1, newFeed);
+        } else {
+          console.log('feed not found');
+        }
+      },
       deleteFeed(feed) {
         socket.emit('delete-feed', feed);
         let index = this.feeds.findIndex(value => util.match(feed, value));
@@ -104,6 +114,17 @@
           this.feeds.push(feed);
         } else {
           this.feeds.splice(index, 0, feed);
+        }
+      });
+      socket.on('edit-feed', (feed, newFeed) => {
+        console.log('edit-feed ', feed);
+        feed = util.momentise(feed);
+        let index = this.feeds.findIndex(value => util.match(feed, value));
+        if (index !== -1) {
+          newFeed = util.momentise(newFeed);
+          this.feeds.splice(index, 1, newFeed);
+        } else {
+          console.log('feed not found');
         }
       });
       socket.on('delete-feed', feed => {
