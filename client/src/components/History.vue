@@ -8,14 +8,15 @@
       <v-btn fab fixed top right @click="show = false" color="error">
         <v-icon>close</v-icon>
       </v-btn>
-      <div class="display-1">
-        <v-btn fab color="blue darken-2" @click="today = false" :disabled="!today"><v-icon>keyboard_arrow_left</v-icon></v-btn>
-        {{today ? 'Today' : 'Yesterday'}}'s Feeds
-        <v-btn fab color="blue darken-2" @click="today = true" :disabled="today"><v-icon>keyboard_arrow_right</v-icon></v-btn>
-      </div>
+      <div class="display-1">{{today ? 'Today' : 'Yesterday'}}'s Feeds</div>
       <table>
         <tr>
-          <td></td>
+          <td>
+            <v-btn fab small color="blue darken-2" @click="today = !today">
+              <v-icon v-if="today">arrow_back</v-icon>
+              <v-icon v-else>arrow_forward</v-icon>
+            </v-btn>
+          </td>
           <td>
             Time<br/>
             <span class="average">Avg: {{averageGap}}</span>
