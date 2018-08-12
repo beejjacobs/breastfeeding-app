@@ -20,7 +20,10 @@
             Time<br/>
             <span class="average">Avg: {{averageGap}}</span>
           </td>
-          <td></td>
+          <td>
+            <v-btn fab dark small depressed color="pink">{{counts.l}}</v-btn>
+            <v-btn fab dark small depressed color="teal">{{counts.r}}</v-btn>
+          </td>
         </tr>
         <tr v-for="(feed, i) in feeds" :key="i">
           <td>
@@ -75,6 +78,21 @@
           return this.todaysFeeds || [];
         }
         return this.yesterdaysFeeds || [];
+      },
+      counts() {
+        let l = 0;
+        let r = 0;
+        for (let feed of this.feeds) {
+          if (feed.both) {
+            l++;
+            r++;
+          } else if (feed.first === 'L') {
+            l++;
+          } else {
+            r++;
+          }
+        }
+        return {l, r};
       }
     },
     watch: {
