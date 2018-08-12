@@ -4,14 +4,22 @@
       <v-icon>history</v-icon>
     </v-btn>
     <v-card class="main">
+      <v-btn fab fixed top left color="white" outline><span class="white--text headline">{{feeds.length}}</span></v-btn>
       <v-btn fab fixed top right @click="show = false" color="error">
         <v-icon>close</v-icon>
       </v-btn>
-      <div class="display-1">Today's Feeds</div>
+      <div class="display-1">
+        <v-btn fab color="blue darken-2" @click="today = false" :disabled="!today"><v-icon>keyboard_arrow_left</v-icon></v-btn>
+        {{today ? 'Today' : 'Yesterday'}}'s Feeds
+        <v-btn fab color="blue darken-2" @click="today = true" :disabled="today"><v-icon>keyboard_arrow_right</v-icon></v-btn>
+      </div>
       <table>
         <tr>
           <td></td>
-          <td>Time</td>
+          <td>
+            Time<br/>
+            <span class="average">Avg: {{averageGap}}</span>
+          </td>
           <td></td>
         </tr>
         <tr v-for="(feed, i) in feeds" :key="i">
@@ -39,14 +47,35 @@
 <script>
   export default {
     name: "History",
-    props: ['feeds'],
+    props: ['todays-feeds', 'yesterdays-feeds'],
     data() {
       return {
         show: false,
         showEdit: false,
         editFeed: {},
-        menus: []
+        menus: [],
+        today: true
       };
+    },
+    computed: {
+      averageGap() {
+        let times = this.feeds.map(feed => feed.dateTime);
+        if (times.length < 2) {
+          return '0:00';
+        }
+        let total = 0;
+        for (let i = 1; i < times.length; i++) {
+          total += this.$moment.duration(times[i].diff(times[i-1]));
+        }
+        let average = this.$moment.duration(total / (times.length-1));
+        return average.hours() + ':' + (average.minutes() < 10 ? '0' : '') + average.minutes();
+      },
+      feeds() {
+        if (this.today) {
+          return this.todaysFeeds || [];
+        }
+        return this.yesterdaysFeeds || [];
+      }
     },
     watch: {
       feeds() {

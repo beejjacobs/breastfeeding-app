@@ -57,6 +57,10 @@ export default {
   isToday(feed) {
     return feed.dateTime.isSame(Vue.moment(), 'day');
   },
+  isYesterday(feed) {
+    let yesterday = Vue.moment().subtract(1, 'day');
+    return feed.dateTime.isSame(yesterday, 'day');
+  },
   match(feed1, feed2) {
     return feed1.dateTime.format() === feed2.dateTime.format() && feed1.first === feed2.first && feed1.both === feed2.both;
   }

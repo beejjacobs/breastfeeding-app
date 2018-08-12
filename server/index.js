@@ -9,9 +9,10 @@ console.log(jsonPath);
 /** @type Array */
 let feeds = require(jsonPath);
 
-function todaysFeeds() {
+function todayAndYesterdaysFeeds() {
   let now = moment();
-  return feeds.filter(value => moment(value.dateTime).isSame(now, 'day'));
+  let yesterday = moment().subtract(1, 'day');
+  return feeds.filter(value => moment(value.dateTime).isSame(now, 'day') || moment(value.dateTime).isSame(yesterday, 'day'));
 }
 
 function lastFeed() {
@@ -34,18 +35,18 @@ io.on('connection', function (socket) {
   if (feeds.length === 0) {
     message += ': no feeds';
   } else {
-    let todays = todaysFeeds();
-    if (todays.length === 0) {
+    let ty = todayAndYesterdaysFeeds();
+    if (ty.length === 0) {
       let last = lastFeed();
-      message += `: no feeds today, sending last feed (${JSON.stringify(last)})`;
+      message += `: no feeds today or yesterday, sending last feed (${JSON.stringify(last)})`;
       toSend.push(last);
     } else {
-      message += `: sending todays feeds (${todays.length})`;
-      toSend = todays;
+      message += `: sending todays and yesterdays feeds (${ty.length})`;
+      toSend = ty;
     }
   }
   console.log(message);
-  socket.emit('todays-feeds', toSend);
+  socket.emit('feeds', toSend);
 
   socket.on('feed', feed => {
     feeds.push(feed);

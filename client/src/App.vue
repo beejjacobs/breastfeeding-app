@@ -3,7 +3,7 @@
     <v-content>
       <v-layout align-center justify-center class="section">
         <last-feed v-if="feeds.length !== 0" :last-feed="lastFeed" :feed-count="todaysFeeds.length" @both="both"></last-feed>
-        <history v-if="feeds.length !== 0" :feeds="todaysFeeds" @delete-feed="deleteFeed" @edit-feed="editFeed"></history>
+        <history v-if="feeds.length !== 0" :todays-feeds="todaysFeeds" :yesterdays-feeds="yesterdaysFeeds" @delete-feed="deleteFeed" @edit-feed="editFeed"></history>
         <v-flex v-else-if="loading">
           <v-progress-circular
               :size="50"
@@ -90,6 +90,9 @@
       },
       todaysFeeds() {
         return this.feeds.filter(util.isToday);
+      },
+      yesterdaysFeeds() {
+        return this.feeds.filter(util.isYesterday);
       }
     },
     created() {
@@ -101,9 +104,9 @@
         console.log('feed-update ', feed);
         this.$set(this.feeds, this.feeds.length - 1, util.momentise(feed));
       });
-      socket.on('todays-feeds', feeds => {
+      socket.on('feeds', feeds => {
         this.loading = false;
-        console.log('todays-feeds ', feeds);
+        console.log('feeds ', feeds);
         this.feeds = feeds.map(util.momentise);
       });
       socket.on('add-feed', feed => {
