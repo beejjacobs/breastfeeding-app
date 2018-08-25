@@ -64,6 +64,9 @@
     computed: {
       averageGap() {
         let times = this.feeds.map(feed => feed.dateTime);
+        if (this.today && this.yesterdaysFeeds) {
+          times.unshift(this.yesterdaysFeeds[this.yesterdaysFeeds.length-1].dateTime);
+        }
         if (times.length < 2) {
           return '0:00';
         }
