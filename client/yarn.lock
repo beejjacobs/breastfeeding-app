@@ -1532,6 +1532,10 @@ deep-extend@^0.6.0:
   version "0.6.0"
   resolved "https://nexus.vanti.co.uk/repository/npm-public/deep-extend/-/deep-extend-0.6.0.tgz#c4fa7c95404a17a9c3e8ca7e1537312b736330ac"
 
+deepmerge@^2.1.0:
+  version "2.2.1"
+  resolved "https://nexus.vanti.co.uk/repository/npm-public/deepmerge/-/deepmerge-2.2.1.tgz#5d3ff22a01c00f645405a2fbc17d0778a1801170"
+
 define-properties@^1.1.2:
   version "1.1.3"
   resolved "https://nexus.vanti.co.uk/repository/npm-public/define-properties/-/define-properties-1.1.3.tgz#cf88da6cbee26fe6db7094f61d870cbd84cee9f1"
@@ -4296,6 +4300,10 @@ shebang-regex@^1.0.0:
   version "1.0.0"
   resolved "https://nexus.vanti.co.uk/repository/npm-public/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
 
+shvl@^1.3.0:
+  version "1.3.1"
+  resolved "https://nexus.vanti.co.uk/repository/npm-public/shvl/-/shvl-1.3.1.tgz#6c20a17b4a20b08e9f8cab60c50a92229fcc176e"
+
 signal-exit@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
@@ -4899,6 +4907,13 @@ vue@^2.5.3:
 vuetify@^1.0.0:
   version "1.3.7"
   resolved "https://nexus.vanti.co.uk/repository/npm-public/vuetify/-/vuetify-1.3.7.tgz#894e0bedb3e87fc5bae47896d924caa4e11e6d84"
+
+vuex-persistedstate@^2.5.4:
+  version "2.5.4"
+  resolved "https://nexus.vanti.co.uk/repository/npm-public/vuex-persistedstate/-/vuex-persistedstate-2.5.4.tgz#a19710ad7f9a08cea4e65fc585924d9fdac7384a"
+  dependencies:
+    deepmerge "^2.1.0"
+    shvl "^1.3.0"
 
 vuex@^3.0.1:
   version "3.0.1"
