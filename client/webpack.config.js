@@ -6,7 +6,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/',
-    filename: 'build_2018-11-10.js'
+    filename: 'build.js'
   },
   resolve: {
     extensions: ['.js', '.vue'],
