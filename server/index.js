@@ -29,8 +29,8 @@ function match(feed1, feed2) {
   return feed1.dateTime === feed2.dateTime && feed1.first === feed2.first && feed1.both === feed2.both;
 }
 
-io.on('connection', function (socket) {
-  let message = 'client connected';
+function sendFeeds(socket, refresh) {
+  let message = refresh ? 'client refresh' : 'client connected';
   let toSend = [];
   if (feeds.length === 0) {
     message += ': no feeds';
@@ -47,6 +47,14 @@ io.on('connection', function (socket) {
   }
   console.log(message);
   socket.emit('feeds', toSend);
+}
+
+io.on('connection', function (socket) {
+  sendFeeds(socket, false);
+
+  socket.on('refresh', () => {
+    sendFeeds(socket, true);
+  });
 
   socket.on('feed', feed => {
     feeds.push(feed);
