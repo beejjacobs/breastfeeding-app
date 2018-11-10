@@ -19,6 +19,9 @@
         <start-feed @start-feed="startFeed"></start-feed>
       </v-layout>
       <add-feed @new-feed="newFeed"></add-feed>
+      <v-btn fab fixed bottom left :color="connected ? 'green' : 'red'">
+        <v-icon>{{ connected ? 'link' : 'link_off' }}</v-icon>
+      </v-btn>
     </v-content>
   </v-app>
 </template>
@@ -36,7 +39,8 @@
         feeds: [],
         loading: true,
         addDialog: false,
-        historyDialog: false
+        historyDialog: false,
+        connected: false
       }
     },
     methods: {
@@ -96,6 +100,12 @@
       }
     },
     created() {
+      socket.on('connect', () => {
+        this.connected = true;
+      });
+      socket.on('disconnect', () => {
+        this.connected = false;
+      });
       socket.on('feed', feed => {
         console.log('feed ', feed);
         this.feeds.push(util.momentise(feed));
