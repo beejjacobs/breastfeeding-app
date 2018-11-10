@@ -27,11 +27,8 @@
 </template>
 
 <script>
-  import io from 'socket.io-client';
+  import socket from './socket';
   import util from './util';
-
-  const url = process.env.NODE_ENV === 'production' ? '192.168.0.2' : 'localhost';
-  const socket = io.connect(`http://${url}:3002`);
 
   export default {
     data() {
@@ -46,16 +43,16 @@
     methods: {
       startFeed(side) {
         let feed = {dateTime: this.$moment(), first: side, both: false};
-        socket.emit('feed', feed);
+        this.action('feed', feed);
         this.feeds.push(feed);
       },
       both() {
         this.lastFeed.both = true;
-        socket.emit('feed-update', this.lastFeed);
+        this.action('feed-update', this.lastFeed);
       },
       newFeed(feed) {
         feed = util.momentise(feed);
-        socket.emit('add-feed', feed);
+        this.action('add-feed', feed);
         let index = util.insertIndex(this.feeds, feed);
         if (index === -1) {
           this.feeds.push(feed);
@@ -65,7 +62,7 @@
       },
       editFeed(feed, newFeed) {
         newFeed = util.momentise(newFeed);
-        socket.emit('edit-feed', feed, newFeed);
+        this.action('edit-feed', feed, newFeed);
         let index = this.feeds.findIndex(value => util.match(feed, value));
         if (index !== -1) {
           this.feeds.splice(index, 1, newFeed);
@@ -74,12 +71,24 @@
         }
       },
       deleteFeed(feed) {
-        socket.emit('delete-feed', feed);
+        this.action('delete-feed', feed);
         let index = this.feeds.findIndex(value => util.match(feed, value));
         if (index !== -1) {
           this.feeds.splice(index, 1);
         } else {
           console.log('feed not found');
+        }
+      },
+      action(action, feed, newFeed) {
+        if (this.connected) {
+          socket.emit(action, feed, newFeed);
+        } else {
+          let feedCopy = {dateTime: feed.dateTime.format(), first: feed.first, both: feed.both};
+          let newFeedCopy = {};
+          if (newFeed) {
+            newFeedCopy = {dateTime: newFeed.dateTime.format(), first: newFeed.first, both: newFeed.both};
+          }
+          this.$store.commit('addAction', {action: action, feed: feedCopy, newFeed: newFeedCopy});
         }
       }
     },
@@ -100,8 +109,13 @@
       }
     },
     created() {
+      setTimeout(() => {
+        this.loading = false;
+      }, 2000);
+
       socket.on('connect', () => {
         this.connected = true;
+        this.$store.dispatch('recall');
       });
       socket.on('disconnect', () => {
         this.connected = false;

@@ -21,7 +21,10 @@ Vue.component('history', History);
 Vue.component('last-feed', LastFeed);
 Vue.component('start-feed', StartFeed);
 
+import store from './store';
+
 new Vue({
   el: '#app',
+  store,
   render: h => h(App)
 })
