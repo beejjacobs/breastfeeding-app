@@ -111,7 +111,7 @@
     created() {
       setTimeout(() => {
         this.loading = false;
-      }, 2000);
+      }, 5000);
 
       socket.on('connect', () => {
         this.connected = true;
