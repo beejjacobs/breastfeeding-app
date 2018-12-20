@@ -131,7 +131,12 @@ export default new Vuex.Store({
     }
   },
   plugins: [
-    createPersistedState(),
+    createPersistedState({
+      paths: [
+        'feeds',
+        'savedActions'
+      ]
+    }),
     SocketStorePlugin
   ]
 });
