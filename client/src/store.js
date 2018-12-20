@@ -15,19 +15,25 @@ export default new Vuex.Store({
     savedActions: []
   },
   getters: {
-    lastFeed(state) {
-      if (state.feeds.length === 0) {
+    feeds(state) {
+      return state.feeds.map(feed => {
+        feed.dateTime = moment(feed.dateTime);
+        return feed;
+      })
+    },
+    lastFeed(state, getters) {
+      if (getters.feeds.length === 0) {
         return {};
       }
-      let feed = state.feeds[state.feeds.length - 1];
+      let feed = getters.feeds[getters.feeds.length - 1];
       feed.next = feed.dateTime.clone().add(2, 'hours');
       return feed;
     },
-    todaysFeeds(state) {
-      return state.feeds.filter(util.isToday);
+    todaysFeeds(state, getters) {
+      return getters.feeds.filter(util.isToday);
     },
-    yesterdaysFeeds(state) {
-      return state.feeds.filter(util.isYesterday);
+    yesterdaysFeeds(state, getters) {
+      return getters.feeds.filter(util.isYesterday);
     }
   },
   mutations: {

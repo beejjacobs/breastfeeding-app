@@ -55,14 +55,14 @@
     },
     computed: {
       ...mapGetters([
+        'feeds',
         'lastFeed',
         'todaysFeeds',
         'yesterdaysFeeds'
       ]),
       ...mapState({
         connected: state => state.connected,
-        loading: state => state.loading,
-        feeds: state => state.feeds
+        loading: state => state.loading
       })
     },
     created() {
