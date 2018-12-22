@@ -19,9 +19,7 @@
         <start-feed @start-feed="startFeed"></start-feed>
       </v-layout>
       <add-feed @new-feed="newFeed"></add-feed>
-      <v-btn fab fixed bottom left :color="connected ? 'green' : 'red'">
-        <v-icon>{{ connected ? 'link' : 'link_off' }}</v-icon>
-      </v-btn>
+      <status :connected="connected" :last-connected-at="lastConnected" :saved-actions-count="savedActionsCount"/>
     </v-content>
   </v-app>
 </template>
@@ -58,10 +56,12 @@
         'feeds',
         'lastFeed',
         'todaysFeeds',
-        'yesterdaysFeeds'
+        'yesterdaysFeeds',
+        'savedActionsCount'
       ]),
       ...mapState({
         connected: state => state.connected,
+        lastConnected: state => state.lastConnected,
         loading: state => state.loading
       })
     },

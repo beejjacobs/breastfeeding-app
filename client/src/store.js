@@ -10,6 +10,7 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     connected: false,
+    lastConnected: 'unknown',
     loading: false,
     feeds: [],
     savedActions: []
@@ -34,11 +35,17 @@ export default new Vuex.Store({
     },
     yesterdaysFeeds(state, getters) {
       return getters.feeds.filter(util.isYesterday);
+    },
+    savedActionsCount(state) {
+      return state.savedActions.length;
     }
   },
   mutations: {
     setConnected(state, connected) {
       state.connected = connected;
+    },
+    updateLastConnected(state) {
+      state.lastConnected = moment();
     },
     setLoading(state, loading) {
       state.loading = loading;
@@ -140,7 +147,8 @@ export default new Vuex.Store({
     createPersistedState({
       paths: [
         'feeds',
-        'savedActions'
+        'savedActions',
+        'lastConnected'
       ]
     }),
     SocketStorePlugin

@@ -13,6 +13,7 @@ import FeedView from './components/FeedView';
 import History from './components/History';
 import LastFeed from './components/LastFeed';
 import StartFeed from './components/StartFeed';
+import Status from './components/Status';
 
 Vue.component('add-feed', AddFeed);
 Vue.component('breast', Breast);
@@ -20,6 +21,7 @@ Vue.component('feed-view', FeedView);
 Vue.component('history', History);
 Vue.component('last-feed', LastFeed);
 Vue.component('start-feed', StartFeed);
+Vue.component('status', Status);
 
 import store from './store';
 

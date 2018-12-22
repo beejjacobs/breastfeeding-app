@@ -7,6 +7,7 @@ const socket = io.connect(`http://${url}:3002`);
 const SocketStorePlugin = store => {
   socket.on('connect', () => {
     store.commit('setConnected', true);
+    store.commit('updateLastConnected');
     store.dispatch('recall');
   });
   socket.on('disconnect', () => {
